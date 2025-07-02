@@ -247,7 +247,9 @@ class PDFMensuel(FPDF):
         self.set_font('Arial', 'B', 10)
         self.cell(col_w, 8, "Total", 1, 0, 'C', True)
         for i in range(start, end):
-            label = f"Jour {i+1}"
+            # Utiliser le jour de la semaine et le numéro du jour
+            jour_info = jours_data[i]
+            label = f"{jour_info['jour_semaine']} {jour_info['jour_num']}"
             self.cell(col_w, 8, label, 1, 0, 'C', True)
         self.ln()
         # Ligne 1 : blanc
@@ -270,7 +272,9 @@ class PDFMensuel(FPDF):
             self.set_fill_color(233, 238, 244)
             self.set_font('Arial', 'B', 10)
             for i in range(start, end2):
-                label = f"Jour {i+1}"
+                # Utiliser le jour de la semaine et le numéro du jour
+                jour_info = jours_data[i]
+                label = f"{jour_info['jour_semaine']} {jour_info['jour_num']}"
                 self.cell(col_w, 8, label, 1, 0, 'C', True)
             self.ln()
             # Ligne 1 : blanc
