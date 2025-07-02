@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Rapport Triskell</title>
+    <title>Générateur de Rapport Triskell - Calendrier Interactif</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,43 +16,65 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
+            overflow: hidden;
         }
 
         .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
             text-align: center;
-            margin-bottom: 30px;
         }
 
         .header h1 {
-            color: #333;
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .header p {
-            color: #666;
             font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .calendar-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -59,23 +82,20 @@
             margin-bottom: 8px;
             color: #333;
             font-weight: 600;
-            font-size: 1.1em;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             transition: all 0.3s ease;
-            background: #f8f9fa;
         }
 
         .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #667eea;
-            background: white;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
@@ -98,19 +118,12 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            background: white;
         }
 
         .file-upload-label:hover {
             background: #e8f0fe;
             border-color: #764ba2;
-        }
-
-        .file-upload-label i {
-            font-size: 2em;
-            color: #667eea;
-            margin-bottom: 10px;
-            display: block;
         }
 
         .btn {
@@ -132,12 +145,187 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        .btn-secondary {
+            background: #6c757d;
         }
 
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        /* Calendrier */
+        .calendar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-nav button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: #5a6fd8;
+        }
+
+        .calendar-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            color: #667eea;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .calendar-day:hover {
+            background: #e8f0fe;
+        }
+
+        .calendar-day.selected {
+            background: #667eea;
+            color: white;
+            border-color: #5a6fd8;
+        }
+
+        .calendar-day.weekend {
+            background: #f8f9fa;
+            color: #999;
+        }
+
+        .calendar-day.weekend.selected {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .calendar-day.other-month {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Sélecteurs rapides */
+        .quick-selectors {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .quick-selector {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .quick-selector:hover {
+            border-color: #667eea;
+            background: #e8f0fe;
+        }
+
+        .quick-selector.active {
+            background: #667eea;
+            color: white;
+            border-color: #5a6fd8;
+        }
+
+        /* Sélection de plage */
+        .range-selector {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .range-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .range-inputs input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Résumé des sélections */
+        .selection-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f0fe;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .selection-summary h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .selected-days {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .selected-day-tag {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+
+        /* Alertes */
         .alert {
             padding: 15px;
             border-radius: 10px;
@@ -157,34 +345,24 @@
             border: 1px solid #cfc;
         }
 
-        .info-box {
-            background: #e8f0fe;
-            border: 1px solid #b3d9ff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .info-box h3 {
-            color: #0066cc;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-
-        .info-box ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .info-box li {
-            padding: 5px 0;
-            color: #333;
-        }
-
-        .info-box li:before {
-            content: "✓ ";
-            color: #0066cc;
-            font-weight: bold;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .calendar-grid {
+                gap: 1px;
+            }
+            
+            .calendar-day {
+                font-size: 0.9em;
+            }
         }
 
         .loading {
@@ -207,25 +385,13 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Générateur de Rapport Triskell</h1>
-            <p>Générez vos feuilles de temps Triskell en PDF, en un clic, à partir d'un fichier Excel.</p>
-            <p style="color:#667eea;font-size:1em;margin-top:8px;">Automatisez la gestion des absences et obtenez un PDF professionnel, fidèle au modèle Triskell.</p>
+            <h1><i class="fas fa-calendar-alt"></i> Générateur Triskell</h1>
+            <p>Sélectionnez vos jours d'absence avec le calendrier interactif</p>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -238,82 +404,330 @@
             {% endif %}
         {% endwith %}
 
-        <div class="info-box">
-            <h3>📋 Comment ça marche ?</h3>
-            <ul>
-                <li>Uploadez votre fichier Excel (.xlsx ou .xls)</li>
-                <li>Spécifiez vos jours d'absence (ex: 9,10,15)</li>
-                <li>Choisissez le mois et l'année</li>
-                <li>Le PDF sera généré automatiquement</li>
-            </ul>
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #b3d9ff;">
-                <strong>📊 Logique automatique :</strong>
-                <ul style="margin-top: 8px;">
-                    <li>✅ <strong>Jours travaillés</strong> (lun-ven) : 1 dans A1039, 0 dans EXT</li>
-                    <li>🚫 <strong>Weekends</strong> (sam-dim) : 0 dans les deux colonnes</li>
-                    <li>🏖️ <strong>Jours d'absence</strong> : 0 dans A1039, 1 dans EXT</li>
-                </ul>
-            </div>
-        </div>
+        <div class="main-content">
+            <!-- Section Formulaire -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-file-upload"></i>
+                    Fichier Excel
+                </h2>
 
-        <form method="POST" enctype="multipart/form-data" id="triskellForm">
-            <div class="form-group">
-                <label for="file">📁 Fichier Excel</label>
-                <div class="file-upload">
-                    <input type="file" id="file" name="file" accept=".xlsx,.xls" required>
-                    <label for="file" class="file-upload-label">
-                        <i>📄</i>
-                        <span id="fileText">Cliquez pour sélectionner votre fichier Excel</span>
-                    </label>
+                <form method="POST" enctype="multipart/form-data" id="triskellForm">
+                    <div class="form-group">
+                        <label for="file">📁 Fichier Excel</label>
+                        <div class="file-upload">
+                            <input type="file" id="file" name="file" accept=".xlsx,.xls" required>
+                            <label for="file" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 2em; color: #667eea; margin-bottom: 10px;"></i>
+                                <span id="fileText">Cliquez pour sélectionner votre fichier Excel</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="absence_dates">🏖️ Jours d'absence sélectionnés</label>
+                        <input type="text" id="absence_dates" name="absence_dates" readonly>
+                        <small style="color: #666; font-size: 0.9em;">
+                            Sélectionnez les jours dans le calendrier à droite
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="month">📅 Mois</label>
+                        <select id="month" name="month" required>
+                            <option value="">Sélectionnez un mois</option>
+                            <option value="1">Janvier</option>
+                            <option value="2">Février</option>
+                            <option value="3">Mars</option>
+                            <option value="4">Avril</option>
+                            <option value="5">Mai</option>
+                            <option value="6" selected>Juin</option>
+                            <option value="7">Juillet</option>
+                            <option value="8">Août</option>
+                            <option value="9">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
+                            <option value="12">Décembre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year">📅 Année</label>
+                        <input type="number" id="year" name="year" value="2025" min="2020" max="2030" required>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">
+                        <i class="fas fa-file-pdf"></i> Générer le PDF
+                    </button>
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Génération du PDF en cours...</p>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="absence_dates">🏖️ Jours d'absence</label>
-                <input type="text" id="absence_dates" name="absence_dates" 
-                       placeholder="Ex: 9,10,15 ou [9,10,15] (optionnel)">
-                <small style="color: #666; font-size: 0.9em;">
-                    Laissez vide si pas d'absence
-                </small>
+            <!-- Section Calendrier -->
+            <div class="calendar-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar"></i>
+                    Calendrier des absences
+                </h2>
+
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <div class="calendar-nav">
+                            <button onclick="previousMonth()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button onclick="nextMonth()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-title" id="calendarTitle">Juin 2025</div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Le calendrier sera généré ici -->
+                    </div>
+                </div>
+
+                <!-- Sélecteurs rapides -->
+                <div class="quick-selectors">
+                    <div class="quick-selector" onclick="selectPattern('all_weekdays')">
+                        <i class="fas fa-briefcase"></i><br>
+                        Tous les jours<br>de semaine
+                    </div>
+                    <div class="quick-selector" onclick="selectPattern('all_weekends')">
+                        <i class="fas fa-umbrella-beach"></i><br>
+                        Tous les<br>weekends
+                    </div>
+                    <div class="quick-selector" onclick="selectPattern('day_0')">
+                        <i class="fas fa-calendar-day"></i><br>
+                        Tous les<br>lundis
+                    </div>
+                    <div class="quick-selector" onclick="selectPattern('day_4')">
+                        <i class="fas fa-calendar-day"></i><br>
+                        Tous les<br>vendredis
+                    </div>
+                </div>
+
+                <!-- Sélection de plage -->
+                <div class="range-selector">
+                    <h4><i class="fas fa-arrows-alt-h"></i> Sélection de plage</h4>
+                    <div class="range-inputs">
+                        <input type="number" id="rangeStart" placeholder="Jour début" min="1" max="31">
+                        <input type="number" id="rangeEnd" placeholder="Jour fin" min="1" max="31">
+                    </div>
+                    <button class="btn btn-secondary" onclick="selectRange()">
+                        <i class="fas fa-check"></i> Appliquer la plage
+                    </button>
+                </div>
+
+                <!-- Résumé des sélections -->
+                <div class="selection-summary">
+                    <h4><i class="fas fa-list"></i> Jours sélectionnés</h4>
+                    <div class="selected-days" id="selectedDaysSummary">
+                        Aucun jour sélectionné
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="month">📅 Mois</label>
-                <select id="month" name="month" required>
-                    <option value="">Sélectionnez un mois</option>
-                    <option value="1">Janvier</option>
-                    <option value="2">Février</option>
-                    <option value="3">Mars</option>
-                    <option value="4">Avril</option>
-                    <option value="5">Mai</option>
-                    <option value="6" selected>Juin</option>
-                    <option value="7">Juillet</option>
-                    <option value="8">Août</option>
-                    <option value="9">Septembre</option>
-                    <option value="10">Octobre</option>
-                    <option value="11">Novembre</option>
-                    <option value="12">Décembre</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="year">📅 Année</label>
-                <input type="number" id="year" name="year" value="2025" min="2020" max="2030" required>
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">
-                🚀 Générer le PDF
-            </button>
-        </form>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Génération du PDF en cours...</p>
         </div>
     </div>
 
     <script>
-        // Gestion de l'affichage du nom de fichier
+        let currentYear = 2025;
+        let currentMonth = 6;
+        let selectedDays = new Set();
+        let calendarData = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCalendar(currentYear, currentMonth);
+            updateMonthYear();
+        });
+
+        // Charger le calendrier
+        async function loadCalendar(year, month) {
+            try {
+                const response = await fetch(`/api/calendar/${year}/${month}`);
+                calendarData = await response.json();
+                renderCalendar();
+            } catch (error) {
+                console.error('Erreur lors du chargement du calendrier:', error);
+            }
+        }
+
+        // Rendu du calendrier
+        function renderCalendar() {
+            if (!calendarData) return;
+
+            // Mettre à jour le titre du calendrier
+            document.getElementById('calendarTitle').textContent = 
+                `${calendarData.month_name} ${calendarData.year}`;
+
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            // En-têtes des jours
+            const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // Jours vides au début
+            for (let i = 0; i < calendarData.first_day; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                grid.appendChild(emptyDay);
+            }
+
+            // Jours du mois
+            calendarData.days.forEach(dayData => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = dayData.day;
+                
+                if (dayData.is_weekend) {
+                    dayElement.classList.add('weekend');
+                }
+                
+                if (selectedDays.has(dayData.day)) {
+                    dayElement.classList.add('selected');
+                }
+
+                dayElement.onclick = () => toggleDay(dayData.day);
+                grid.appendChild(dayElement);
+            });
+
+            updateSelectionSummary();
+        }
+
+        // Basculer la sélection d'un jour
+        function toggleDay(day) {
+            if (selectedDays.has(day)) {
+                selectedDays.delete(day);
+            } else {
+                selectedDays.add(day);
+            }
+            
+            renderCalendar();
+            updateAbsenceDates();
+        }
+
+        // Mettre à jour le champ des dates d'absence
+        function updateAbsenceDates() {
+            const absenceInput = document.getElementById('absence_dates');
+            const sortedDays = Array.from(selectedDays).sort((a, b) => a - b);
+            absenceInput.value = sortedDays.join(',');
+        }
+
+        // Mettre à jour le résumé des sélections
+        function updateSelectionSummary() {
+            const summary = document.getElementById('selectedDaysSummary');
+            const sortedDays = Array.from(selectedDays).sort((a, b) => a - b);
+            
+            if (sortedDays.length === 0) {
+                summary.innerHTML = 'Aucun jour sélectionné';
+                return;
+            }
+
+            summary.innerHTML = sortedDays.map(day => 
+                `<span class="selected-day-tag">${day}</span>`
+            ).join('');
+        }
+
+        // Navigation du calendrier
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 1) {
+                currentMonth = 12;
+                currentYear--;
+            }
+            loadCalendar(currentYear, currentMonth);
+            updateMonthYear();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 12) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            loadCalendar(currentYear, currentMonth);
+            updateMonthYear();
+        }
+
+        function updateMonthYear() {
+            document.getElementById('month').value = currentMonth;
+            document.getElementById('year').value = currentYear;
+        }
+
+        // Sélection par pattern
+        async function selectPattern(pattern) {
+            try {
+                const response = await fetch('/api/select-pattern', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        year: currentYear,
+                        month: currentMonth,
+                        pattern: pattern
+                    })
+                });
+
+                const data = await response.json();
+                if (data.selected_days) {
+                    selectedDays = new Set(data.selected_days);
+                    renderCalendar();
+                    updateAbsenceDates();
+                }
+            } catch (error) {
+                console.error('Erreur lors de la sélection par pattern:', error);
+            }
+        }
+
+        // Sélection de plage
+        async function selectRange() {
+            const start = parseInt(document.getElementById('rangeStart').value);
+            const end = parseInt(document.getElementById('rangeEnd').value);
+            
+            if (start && end && start <= end) {
+                try {
+                    const response = await fetch('/api/select-pattern', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            year: currentYear,
+                            month: currentMonth,
+                            pattern: 'range',
+                            start_day: start,
+                            end_day: end
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.selected_days) {
+                        selectedDays = new Set(data.selected_days);
+                        renderCalendar();
+                        updateAbsenceDates();
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la sélection de plage:', error);
+                }
+            } else {
+                alert('Veuillez entrer une plage valide (début ≤ fin)');
+            }
+        }
+
+        // Gestion du fichier
         document.getElementById('file').addEventListener('change', function(e) {
             const file = e.target.files[0];
             const fileText = document.getElementById('fileText');
@@ -324,21 +738,22 @@
             }
         });
 
-        // Gestion du loading
+        // Gestion du formulaire
         document.getElementById('triskellForm').addEventListener('submit', function() {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('submitBtn').disabled = true;
-            document.getElementById('submitBtn').textContent = '⏳ Traitement...';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
         });
 
-        // Validation des dates d'absence
-        document.getElementById('absence_dates').addEventListener('input', function(e) {
-            const value = e.target.value;
-            if (value && !/^[\d,\s\[\]]+$/.test(value)) {
-                e.target.style.borderColor = '#ff6b6b';
-            } else {
-                e.target.style.borderColor = '#e1e5e9';
-            }
+        // Synchronisation mois/année
+        document.getElementById('month').addEventListener('change', function() {
+            currentMonth = parseInt(this.value);
+            loadCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('year').addEventListener('change', function() {
+            currentYear = parseInt(this.value);
+            loadCalendar(currentYear, currentMonth);
         });
     </script>
 </body>
