@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Rapport Triskell</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 20px;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .file-upload-label:hover {
+            background: #e8f0fe;
+            border-color: #764ba2;
+        }
+
+        .file-upload-label i {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+
+        .info-box {
+            background: #e8f0fe;
+            border: 1px solid #b3d9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-box h3 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-box li {
+            padding: 5px 0;
+            color: #333;
+        }
+
+        .info-box li:before {
+            content: "✓ ";
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Générateur de Rapport Triskell</h1>
+            <p>Générez vos feuilles de temps Triskell en PDF, en un clic, à partir d'un fichier Excel.</p>
+            <p style="color:#667eea;font-size:1em;margin-top:8px;">Automatisez la gestion des absences et obtenez un PDF professionnel, fidèle au modèle Triskell.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'error' if category == 'error' else 'success' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="info-box">
+            <h3>📋 Comment ça marche ?</h3>
+            <ul>
+                <li>Uploadez votre fichier Excel (.xlsx ou .xls)</li>
+                <li>Spécifiez vos jours d'absence (ex: 9,10,15)</li>
+                <li>Choisissez le mois et l'année</li>
+                <li>Le PDF sera généré automatiquement</li>
+            </ul>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #b3d9ff;">
+                <strong>📊 Logique automatique :</strong>
+                <ul style="margin-top: 8px;">
+                    <li>✅ <strong>Jours travaillés</strong> (lun-ven) : 1 dans A1039, 0 dans EXT</li>
+                    <li>🚫 <strong>Weekends</strong> (sam-dim) : 0 dans les deux colonnes</li>
+                    <li>🏖️ <strong>Jours d'absence</strong> : 0 dans A1039, 1 dans EXT</li>
+                </ul>
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="triskellForm">
+            <div class="form-group">
+                <label for="file">📁 Fichier Excel</label>
+                <div class="file-upload">
+                    <input type="file" id="file" name="file" accept=".xlsx,.xls" required>
+                    <label for="file" class="file-upload-label">
+                        <i>📄</i>
+                        <span id="fileText">Cliquez pour sélectionner votre fichier Excel</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="absence_dates">🏖️ Jours d'absence</label>
+                <input type="text" id="absence_dates" name="absence_dates" 
+                       placeholder="Ex: 9,10,15 ou [9,10,15] (optionnel)">
+                <small style="color: #666; font-size: 0.9em;">
+                    Laissez vide si pas d'absence
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="month">📅 Mois</label>
+                <select id="month" name="month" required>
+                    <option value="">Sélectionnez un mois</option>
+                    <option value="1">Janvier</option>
+                    <option value="2">Février</option>
+                    <option value="3">Mars</option>
+                    <option value="4">Avril</option>
+                    <option value="5">Mai</option>
+                    <option value="6" selected>Juin</option>
+                    <option value="7">Juillet</option>
+                    <option value="8">Août</option>
+                    <option value="9">Septembre</option>
+                    <option value="10">Octobre</option>
+                    <option value="11">Novembre</option>
+                    <option value="12">Décembre</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">📅 Année</label>
+                <input type="number" id="year" name="year" value="2025" min="2020" max="2030" required>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                🚀 Générer le PDF
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Génération du PDF en cours...</p>
+        </div>
+    </div>
+
+    <script>
+        // Gestion de l'affichage du nom de fichier
+        document.getElementById('file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileText = document.getElementById('fileText');
+            if (file) {
+                fileText.textContent = `Fichier sélectionné: ${file.name}`;
+            } else {
+                fileText.textContent = 'Cliquez pour sélectionner votre fichier Excel';
+            }
+        });
+
+        // Gestion du loading
+        document.getElementById('triskellForm').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = '⏳ Traitement...';
+        });
+
+        // Validation des dates d'absence
+        document.getElementById('absence_dates').addEventListener('input', function(e) {
+            const value = e.target.value;
+            if (value && !/^[\d,\s\[\]]+$/.test(value)) {
+                e.target.style.borderColor = '#ff6b6b';
+            } else {
+                e.target.style.borderColor = '#e1e5e9';
+            }
+        });
+    </script>
+</body>
+</html> 
