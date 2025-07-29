@@ -26,8 +26,8 @@ Générateur automatique de rapports de temps Triskell au format PDF à partir d
 ### Installation
 ```bash
 # Cloner le projet
-git clone <repository-url>
-cd triskell_generator
+git clone git@github.com:arioual-utech/triskell_export_generator.git
+cd triskell_export_generator
 
 # Installer les dépendances
 pip install -r requirements.txt
