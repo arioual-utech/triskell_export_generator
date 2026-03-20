@@ -37,30 +37,15 @@ Pour le retrouver, connectez-vous à [Triskell](https://accounts.google.com/o/sa
 
 ---
 
-## Déploiement GitHub Pages
-
-### Activation (à faire une seule fois)
-
-1. Aller dans **Settings** du dépôt → section **Pages**
-2. Choisir la source : branche `master` (ou `main`), dossier `/ (root)`
-3. Sauvegarder — GitHub Pages sera disponible en quelques secondes à l'adresse :
-   `https://<organisation>.github.io/<nom-du-repo>/`
-
-### Mise à jour
-
-Chaque push sur la branche configurée déclenche automatiquement un nouveau déploiement.
-
----
-
 ## Format du PDF généré
 
 Le PDF suit le format Triskell standard :
 
-- **Tableau récapitulatif** : totaux A1039 (jours travaillés) et EXT (jours d'absence)
+- **Tableau récapitulatif** : totaux PdR (jours travaillés) et EXT (jours d'absence)
 - **Matrice des jours** : grille mensuelle avec une ligne par type (travail / absence)
   - Week-ends : 0 partout
-  - Jours d'absence sélectionnés : A1039 = 0, EXT = 1
-  - Jours travaillés : A1039 = 1, EXT = 0
+  - Jours d'absence sélectionnés : PdR = 0, EXT = 1
+  - Jours travaillés : PdR = 1, EXT = 0
 
 ---
 
