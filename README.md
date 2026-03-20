@@ -1,91 +1,65 @@
-# 📊 Triskell Export Generator
+# Triskell Export Generator
 
-## 📋 Sommaire
-- [🎯 Présentation](#-présentation)
-- [🌐 Utilisation Web](#-utilisation-web)
-- [💻 Utilisation CLI](#-utilisation-cli)
-- [📁 Structure des fichiers](#-structure-des-fichiers)
+Générateur de rapports de temps Triskell au format PDF, **100 % côté navigateur**, sans serveur.
+Hébergé sur GitHub Pages : [https://arioual-utech.github.io/triskell_generator](https://arioual-utech.github.io/triskell_generator)
 
 ---
 
-## 🎯 Présentation
+## Fonctionnalités
 
-Générateur automatique de rapports de temps Triskell au format PDF à partir d'un fichier Excel (.xlsx). L'outil gère les absences et produit une mise en page professionnelle fidèle au modèle Triskell.
-
-**Fonctionnalités principales :**
-- 📈 Lecture de fichiers Excel exportés depuis Triskell
-- 🗓️ Gestion automatique des jours d'absence
-- 📄 Génération PDF conforme à la charte Triskell
-- 🌐 Interface web intuitive
-- ⚡ Utilisation en ligne de commande
+- Calendrier interactif calé sur le mois en cours, navigable mois par mois
+- Champ **Pool de ressources** paramétrable
+- Sélecteurs rapides : tous les jours de semaine, tous les lundis/vendredis, tous les weekends
+- Sélection par plage de jours
+- Génération et téléchargement du PDF en un clic, directement dans le navigateur
+- Aucune donnée envoyée sur un serveur — tout est local
 
 ---
 
-## 🌐 Utilisation Web
+## Utilisation
 
-### Installation
-```bash
-# Cloner le projet
-git clone git@github.com:arioual-utech/triskell_export_generator.git
-cd triskell_export_generator
+Ouvrir l'application dans le navigateur (GitHub Pages ou fichier local), puis :
 
-# Installer les dépendances
-pip install -r requirements.txt
+1. Renseigner le champ **Pool de ressources** (voir section dédiée ci-dessous)
+2. Cliquer sur les jours d'absence dans le calendrier (ou utiliser les sélecteurs rapides)
+3. Cliquer sur **Générer le PDF** — le fichier `Triskell_MM-YYYY.pdf` est téléchargé automatiquement
+
+---
+
+## Trouver la valeur « Pool de ressources »
+
+Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskell.
+Pour le retrouver, connectez-vous à  et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
+
+![Où trouver le pool de ressources dans Triskell](pool_de_ressources.png)
+
+> La valeur par défaut dans l'application est `A1039 Socle IAAS Cloud` — modifiez-la si votre pool est différent.
+
+---
+
+## Format du PDF généré
+
+Le PDF suit le format Triskell standard :
+
+- **Tableau récapitulatif** : totaux PdR (jours travaillés) et EXT (jours d'absence)
+- **Matrice des jours** : grille mensuelle avec une ligne par type (travail / absence)
+  - Week-ends : 0 partout
+  - Jours d'absence sélectionnés : PdR = 0, EXT = 1
+  - Jours travaillés : PdR = 1, EXT = 0
+
+---
+
+## Structure du projet
+
+```
+index.html              Application complète (HTML + CSS + JS, sans dépendances installées)
+pool_de_ressources.png  Capture d'écran Triskell pour identifier le pool de ressources
+.gitignore              Exclut les PDF générés localement
 ```
 
-### Lancement
-```bash
-python3 start_web_interface.py
-```
+### Dépendances embarquées (CDN, aucune installation)
 
-### Accès
-Ouvrez votre navigateur sur : **http://localhost:5000**
-
-### Utilisation
-1. **Uploadez** votre fichier Excel (.xlsx) exporté de Triskell
-2. **Saisissez** les jours d'absence (ex: "9,10,15" ou format JSON)
-3. **Sélectionnez** le mois et l'année
-4. **Générez** votre PDF en un clic !
-
----
-
-## 💻 Utilisation CLI
-
-### Commande de base
-```bash
-python triskell_interactive.py \
-  --input-file "votre_fichier.xlsx" \
-  --absence-dates "9,10,15" \
-  --month 6 \
-  --year 2025
-```
-
-### Options disponibles
-- `--input-file` : Fichier Excel d'entrée
-- `--absence-dates` : Jours d'absence (format: "9,10,15" ou JSON)
-- `--month` : Mois cible (1-12)
-- `--year` : Année cible
-
----
-
-## 📁 Structure des fichiers
-
-### Fichiers principaux
-- **`start_web_interface.py`** 🚀 : Script de démarrage automatique avec vérification des dépendances
-- **`web_interface.py`** 🌐 : Interface web Flask avec upload et génération PDF
-- **`triskell_interactive.py`** ⚡ : Module principal de traitement des données et génération PDF
-- **`requirements.txt`** 📦 : Dépendances Python (Flask, pandas, openpyxl, fpdf)
-
-### Dossiers
-- **`templates/`** 🎨 : Interface HTML
-- **`uploads/`** 📁 : Stockage temporaire des fichiers uploadés
-
-### Format attendu du fichier Excel
-- **Ligne 1** : En-tête général
-- **Ligne 2** : Date au format AAAA-MM (ex: 2025-06)
-- **Ligne 3** : Colonnes des jours (ex: Lun 2, Mar 3, ...)
-- **Lignes suivantes** : Données des projets
-
----
-
-**🎯 Résultat :** PDF professionnel avec alternance de couleurs, totaux calculés et gestion des absences intégrée. 
+| Bibliothèque | Rôle |
+|---|---|
+| [Font Awesome 6](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css) | Icônes |
+| [jsPDF 2.5.1](https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js) | Génération PDF côté client |
