@@ -48,17 +48,12 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1.8fr;
             gap: 30px;
             padding: 30px;
         }
 
-        .form-section {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-        }
-
+        .form-section,
         .calendar-section {
             background: #f8f9fa;
             border-radius: 15px;
@@ -66,7 +61,7 @@
         }
 
         .section-title {
-            font-size: 1.5em;
+            font-size: 1.4em;
             color: #333;
             margin-bottom: 20px;
             display: flex;
@@ -93,6 +88,7 @@
             border-radius: 8px;
             font-size: 14px;
             transition: all 0.3s ease;
+            background: white;
         }
 
         .form-group input:focus,
@@ -105,15 +101,22 @@
         .form-group input[readonly] {
             background: #e9ecef;
             cursor: default;
+            color: #555;
+        }
+
+        .form-hint {
+            margin-top: 5px;
+            font-size: 0.82em;
+            color: #888;
         }
 
         .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px 30px;
+            padding: 14px 20px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -123,33 +126,32 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 18px rgba(102, 126, 234, 0.35);
         }
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 8px 18px rgba(231, 76, 60, 0.3);
         }
 
         .btn-secondary {
             background: #6c757d;
-            margin-top: 10px;
         }
 
         .btn-secondary:hover {
             background: #5a6268;
-            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            margin-top: 10px;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 8px 18px rgba(108, 117, 125, 0.3);
         }
 
         /* Calendrier */
@@ -157,53 +159,52 @@
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .calendar-nav {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .calendar-nav button {
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 8px 12px;
+            border-radius: 6px;
+            padding: 7px 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.2s;
         }
 
-        .calendar-nav button:hover {
-            background: #5a6fd8;
-        }
+        .calendar-nav button:hover { background: #5a6fd8; }
 
         .calendar-title {
-            font-size: 1.3em;
-            font-weight: 600;
+            font-size: 1.2em;
+            font-weight: 700;
             color: #333;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 3px;
         }
 
         .calendar-day-header {
             text-align: center;
-            padding: 10px;
-            font-weight: 600;
+            padding: 8px 4px;
+            font-weight: 700;
+            font-size: 0.82em;
             color: #667eea;
-            background: #f8f9fa;
+            background: #eef0fb;
             border-radius: 5px;
         }
 
@@ -213,27 +214,28 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.2s ease;
-            position: relative;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            font-size: 0.9em;
             border: 2px solid transparent;
-            font-size: 0.95em;
+            user-select: none;
         }
 
         .calendar-day:hover:not(.weekend):not(.empty) {
             background: #e8f0fe;
-            border-color: #667eea;
+            border-color: #c5d0fa;
         }
 
         .calendar-day.selected {
             background: #667eea;
             color: white;
             border-color: #5a6fd8;
+            font-weight: 600;
         }
 
         .calendar-day.weekend {
-            background: #f0f0f0;
-            color: #aaa;
+            background: #f2f2f2;
+            color: #bbb;
             cursor: default;
         }
 
@@ -243,71 +245,94 @@
 
         /* Sélecteurs rapides */
         .quick-selectors {
-            margin-top: 20px;
+            margin-top: 16px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
         .quick-selector {
             background: white;
             border: 2px solid #e1e5e9;
             border-radius: 8px;
-            padding: 10px;
+            padding: 9px 6px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85em;
-            line-height: 1.4;
+            transition: all 0.2s;
+            font-size: 0.78em;
+            line-height: 1.5;
         }
 
         .quick-selector:hover {
             border-color: #667eea;
-            background: #e8f0fe;
+            background: #eef0fb;
         }
 
-        /* Sélection de plage */
+        .quick-selector i {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 1.1em;
+            color: #667eea;
+        }
+
+        /* Sélection plage */
         .range-selector {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 16px;
+            padding: 14px;
             background: white;
             border-radius: 8px;
             border: 2px solid #e1e5e9;
         }
 
         .range-selector h4 {
-            margin-bottom: 12px;
-            color: #333;
-            font-size: 0.95em;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 0.88em;
+            font-weight: 600;
         }
 
         .range-inputs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            align-items: center;
         }
 
         .range-inputs input {
             padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 6px;
             text-align: center;
+            font-size: 0.9em;
         }
 
-        /* Résumé des sélections */
+        .range-inputs button {
+            padding: 8px 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.88em;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .range-inputs button:hover { background: #5a6fd8; }
+
+        /* Résumé */
         .selection-summary {
-            margin-top: 20px;
-            padding: 15px;
-            background: #e8f0fe;
+            margin-top: 16px;
+            padding: 14px;
+            background: #eef0fb;
             border-radius: 8px;
             border-left: 4px solid #667eea;
         }
 
         .selection-summary h4 {
             color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.95em;
+            margin-bottom: 8px;
+            font-size: 0.88em;
         }
 
         .selected-days {
@@ -319,32 +344,33 @@
         .selected-day-tag {
             background: #667eea;
             color: white;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 0.78em;
+            font-weight: 600;
         }
 
         .empty-selection {
-            color: #888;
+            color: #999;
             font-style: italic;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
 
         /* Loading */
         .loading {
             display: none;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 14px;
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
+            border: 4px solid #eee;
             border-top: 4px solid #667eea;
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            width: 32px;
+            height: 32px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 8px;
         }
 
         @keyframes spin {
@@ -354,17 +380,17 @@
 
         /* Alerte */
         .alert {
-            padding: 12px 16px;
+            padding: 11px 14px;
             border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 0.9em;
+            margin-bottom: 14px;
+            font-size: 0.88em;
             display: none;
         }
 
         .alert-error {
-            background: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
+            background: #fde8e8;
+            color: #c0392b;
+            border: 1px solid #f5c6c6;
         }
 
         /* Responsive */
@@ -374,17 +400,10 @@
                 gap: 20px;
             }
 
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .calendar-grid {
-                gap: 1px;
-            }
-
-            .calendar-day {
-                font-size: 0.85em;
-            }
+            .header h1 { font-size: 1.8em; }
+            .quick-selectors { grid-template-columns: repeat(2, 1fr); }
+            .range-inputs { grid-template-columns: 1fr 1fr; }
+            .range-inputs button { grid-column: 1 / -1; }
         }
     </style>
 </head>
@@ -392,7 +411,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-calendar-alt"></i> Générateur Triskell</h1>
-            <p>Sélectionnez le mois et vos jours d'absence, puis générez votre PDF</p>
+            <p>Marquez vos jours d'absence dans le calendrier, puis générez votre PDF</p>
         </div>
 
         <div class="main-content">
@@ -406,31 +425,20 @@
                 <div id="alertError" class="alert alert-error"></div>
 
                 <div class="form-group">
-                    <label for="month">Mois</label>
-                    <select id="month">
-                        <option value="1">Janvier</option>
-                        <option value="2">Février</option>
-                        <option value="3">Mars</option>
-                        <option value="4">Avril</option>
-                        <option value="5">Mai</option>
-                        <option value="6">Juin</option>
-                        <option value="7">Juillet</option>
-                        <option value="8">Août</option>
-                        <option value="9">Septembre</option>
-                        <option value="10">Octobre</option>
-                        <option value="11">Novembre</option>
-                        <option value="12">Décembre</option>
-                    </select>
+                    <label for="poolInput">Pool de ressources</label>
+                    <input type="text" id="poolInput" value="A1039 Socle IAAS Cloud" placeholder="ex: A1039 Socle IAAS Cloud">
+                    <div class="form-hint">Utilisé dans le tableau récapitulatif du PDF</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="year">Année</label>
-                    <input type="number" id="year" value="2025" min="2020" max="2035">
+                    <label>Période sélectionnée</label>
+                    <input type="text" id="periodDisplay" readonly>
+                    <div class="form-hint">Naviguez dans le calendrier pour changer le mois</div>
                 </div>
 
                 <div class="form-group">
-                    <label>Jours d'absence sélectionnés</label>
-                    <input type="text" id="absenceDatesDisplay" readonly placeholder="Aucun — sélectionnez dans le calendrier">
+                    <label>Jours d'absence</label>
+                    <input type="text" id="absenceDatesDisplay" readonly placeholder="Aucun — cliquez dans le calendrier">
                 </div>
 
                 <button class="btn" id="generateBtn" onclick="handleGenerate()">
@@ -438,12 +446,12 @@
                 </button>
 
                 <button class="btn btn-danger" onclick="clearSelection()">
-                    <i class="fas fa-trash"></i> Effacer la sélection
+                    <i class="fas fa-trash-alt"></i> Effacer la sélection
                 </button>
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p style="color:#667eea; font-size:0.9em;">Génération du PDF en cours…</p>
+                    <p style="color:#667eea; font-size:0.85em;">Génération en cours…</p>
                 </div>
             </div>
 
@@ -472,32 +480,34 @@
                 <!-- Sélecteurs rapides -->
                 <div class="quick-selectors">
                     <div class="quick-selector" onclick="applyPattern('all_weekdays')">
-                        <i class="fas fa-briefcase"></i><br>Tous les jours<br>de semaine
+                        <i class="fas fa-briefcase"></i>
+                        Tous les jours de semaine
                     </div>
                     <div class="quick-selector" onclick="applyPattern('day_0')">
-                        <i class="fas fa-calendar-day"></i><br>Tous les<br>lundis
+                        <i class="fas fa-calendar-day"></i>
+                        Tous les lundis
                     </div>
                     <div class="quick-selector" onclick="applyPattern('day_4')">
-                        <i class="fas fa-calendar-day"></i><br>Tous les<br>vendredis
+                        <i class="fas fa-calendar-day"></i>
+                        Tous les vendredis
                     </div>
                     <div class="quick-selector" onclick="applyPattern('all_weekends')">
-                        <i class="fas fa-umbrella-beach"></i><br>Tous les<br>weekends
+                        <i class="fas fa-umbrella-beach"></i>
+                        Tous les weekends
                     </div>
                 </div>
 
-                <!-- Sélection de plage -->
+                <!-- Sélection par plage -->
                 <div class="range-selector">
                     <h4><i class="fas fa-arrows-alt-h"></i> Sélection par plage de jours</h4>
                     <div class="range-inputs">
-                        <input type="number" id="rangeStart" placeholder="Jour début" min="1" max="31">
-                        <input type="number" id="rangeEnd" placeholder="Jour fin" min="1" max="31">
+                        <input type="number" id="rangeStart" placeholder="Début" min="1" max="31">
+                        <input type="number" id="rangeEnd" placeholder="Fin" min="1" max="31">
+                        <button onclick="applyRange()"><i class="fas fa-check"></i> Appliquer</button>
                     </div>
-                    <button class="btn btn-secondary" onclick="applyRange()">
-                        <i class="fas fa-check"></i> Appliquer la plage
-                    </button>
                 </div>
 
-                <!-- Résumé des sélections -->
+                <!-- Résumé -->
                 <div class="selection-summary">
                     <h4><i class="fas fa-list"></i> Jours d'absence sélectionnés</h4>
                     <div class="selected-days" id="selectedDaysSummary">
@@ -509,57 +519,34 @@
     </div>
 
     <script>
-        // ─── État global ──────────────────────────────────────────────────────────
+        // ─── Constantes ───────────────────────────────────────────────────────────
         const MONTH_NAMES = [
             'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
             'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
         ];
         const DAY_NAMES = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
-        let currentYear = new Date().getFullYear();
-        let currentMonth = new Date().getMonth() + 1;
+        // ─── État : initialisé sur le mois en cours ───────────────────────────────
+        const _today = new Date();
+        let currentYear  = _today.getFullYear();
+        let currentMonth = _today.getMonth() + 1; // 1-indexed
         let selectedDays = new Set();
 
-        // ─── Initialisation ───────────────────────────────────────────────────────
+        // ─── Init ─────────────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('month').value = currentMonth;
-            document.getElementById('year').value = currentYear;
             renderCalendar();
-
-            document.getElementById('month').addEventListener('change', function () {
-                currentMonth = parseInt(this.value);
-                selectedDays.clear();
-                renderCalendar();
-                updateUI();
-            });
-
-            document.getElementById('year').addEventListener('change', function () {
-                const v = parseInt(this.value);
-                if (v >= 2020 && v <= 2035) {
-                    currentYear = v;
-                    selectedDays.clear();
-                    renderCalendar();
-                    updateUI();
-                }
-            });
         });
 
-        // ─── Logique calendrier (remplace /api/calendar) ─────────────────────────
+        // ─── Données du calendrier (remplace /api/calendar) ──────────────────────
         function getCalendarData(year, month) {
             const firstDate = new Date(year, month - 1, 1);
-            // JS: 0=dim → convertir en 0=lun
-            const firstDay = (firstDate.getDay() + 6) % 7;
-            const numDays = new Date(year, month, 0).getDate();
+            const firstDay  = (firstDate.getDay() + 6) % 7; // 0=Lun … 6=Dim
+            const numDays   = new Date(year, month, 0).getDate();
             const days = [];
 
             for (let d = 1; d <= numDays; d++) {
-                const date = new Date(year, month - 1, d);
-                const dow = (date.getDay() + 6) % 7; // 0=lun, 6=dim
-                days.push({
-                    day: d,
-                    day_name: DAY_NAMES[dow],
-                    is_weekend: dow >= 5
-                });
+                const dow = (new Date(year, month - 1, d).getDay() + 6) % 7;
+                days.push({ day: d, day_name: DAY_NAMES[dow], is_weekend: dow >= 5 });
             }
             return { year, month, month_name: MONTH_NAMES[month - 1], num_days: numDays, first_day: firstDay, days };
         }
@@ -567,11 +554,16 @@
         // ─── Rendu du calendrier ──────────────────────────────────────────────────
         function renderCalendar() {
             const data = getCalendarData(currentYear, currentMonth);
-            document.getElementById('calendarTitle').textContent = `${data.month_name} ${data.year}`;
+
+            document.getElementById('calendarTitle').textContent =
+                `${data.month_name} ${data.year}`;
+            document.getElementById('periodDisplay').value =
+                `${data.month_name} ${data.year}`;
 
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
 
+            // En-têtes
             DAY_NAMES.forEach(name => {
                 const el = document.createElement('div');
                 el.className = 'calendar-day-header';
@@ -579,121 +571,92 @@
                 grid.appendChild(el);
             });
 
+            // Cases vides avant le 1er
             for (let i = 0; i < data.first_day; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'calendar-day empty';
-                grid.appendChild(empty);
+                const el = document.createElement('div');
+                el.className = 'calendar-day empty';
+                grid.appendChild(el);
             }
 
-            data.days.forEach(dayData => {
+            // Jours
+            data.days.forEach(d => {
                 const el = document.createElement('div');
-                el.className = 'calendar-day';
-                el.textContent = dayData.day;
-
-                if (dayData.is_weekend) {
-                    el.classList.add('weekend');
-                } else {
-                    if (selectedDays.has(dayData.day)) el.classList.add('selected');
-                    el.onclick = () => toggleDay(dayData.day);
-                }
+                el.className = 'calendar-day' +
+                    (d.is_weekend ? ' weekend' : '') +
+                    (!d.is_weekend && selectedDays.has(d.day) ? ' selected' : '');
+                el.textContent = d.day;
+                if (!d.is_weekend) el.onclick = () => toggleDay(d.day);
                 grid.appendChild(el);
             });
+
+            updateUI();
         }
 
         function toggleDay(day) {
-            if (selectedDays.has(day)) {
-                selectedDays.delete(day);
-            } else {
-                selectedDays.add(day);
-            }
+            selectedDays.has(day) ? selectedDays.delete(day) : selectedDays.add(day);
             renderCalendar();
-            updateUI();
         }
 
         function updateUI() {
             const sorted = Array.from(selectedDays).sort((a, b) => a - b);
-            document.getElementById('absenceDatesDisplay').value = sorted.length ? sorted.join(', ') : '';
+
+            document.getElementById('absenceDatesDisplay').value =
+                sorted.length ? sorted.join(', ') : '';
 
             const summary = document.getElementById('selectedDaysSummary');
-            if (sorted.length === 0) {
-                summary.innerHTML = '<span class="empty-selection">Aucun jour sélectionné</span>';
-            } else {
-                summary.innerHTML = sorted.map(d => `<span class="selected-day-tag">${d}</span>`).join('');
-            }
+            summary.innerHTML = sorted.length
+                ? sorted.map(d => `<span class="selected-day-tag">${d}</span>`).join('')
+                : '<span class="empty-selection">Aucun jour sélectionné</span>';
         }
 
         // ─── Navigation mois ──────────────────────────────────────────────────────
         function previousMonth() {
-            currentMonth--;
-            if (currentMonth < 1) { currentMonth = 12; currentYear--; }
-            document.getElementById('month').value = currentMonth;
-            document.getElementById('year').value = currentYear;
+            if (--currentMonth < 1) { currentMonth = 12; currentYear--; }
             selectedDays.clear();
             renderCalendar();
-            updateUI();
         }
 
         function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 12) { currentMonth = 1; currentYear++; }
-            document.getElementById('month').value = currentMonth;
-            document.getElementById('year').value = currentYear;
+            if (++currentMonth > 12) { currentMonth = 1; currentYear++; }
             selectedDays.clear();
             renderCalendar();
-            updateUI();
         }
 
         // ─── Sélecteurs rapides (remplace /api/select-pattern) ───────────────────
         function applyPattern(pattern) {
             const data = getCalendarData(currentYear, currentMonth);
             data.days.forEach(d => {
-                if (d.is_weekend) return;
-                const date = new Date(currentYear, currentMonth - 1, d.day);
-                const dow = (date.getDay() + 6) % 7;
-
-                if (pattern === 'all_weekdays') {
-                    selectedDays.add(d.day);
-                } else if (pattern === 'all_weekends') {
-                    if (d.is_weekend) selectedDays.add(d.day);
-                } else if (pattern.startsWith('day_')) {
-                    const target = parseInt(pattern.split('_')[1]);
-                    if (dow === target) selectedDays.add(d.day);
-                }
+                const dow = (new Date(currentYear, currentMonth - 1, d.day).getDay() + 6) % 7;
+                if (pattern === 'all_weekdays' && !d.is_weekend)  selectedDays.add(d.day);
+                if (pattern === 'all_weekends' && d.is_weekend)   selectedDays.add(d.day);
+                if (pattern === 'day_0' && dow === 0)             selectedDays.add(d.day);
+                if (pattern === 'day_4' && dow === 4)             selectedDays.add(d.day);
             });
-
-            if (pattern === 'all_weekends') {
-                data.days.forEach(d => { if (d.is_weekend) selectedDays.add(d.day); });
-            }
-
             renderCalendar();
-            updateUI();
         }
 
         function applyRange() {
             const start = parseInt(document.getElementById('rangeStart').value);
-            const end = parseInt(document.getElementById('rangeEnd').value);
+            const end   = parseInt(document.getElementById('rangeEnd').value);
             if (!start || !end || start > end) {
-                showError('Veuillez entrer une plage valide (début ≤ fin).');
+                showError('Plage invalide : le début doit être ≤ à la fin.');
                 return;
             }
-            const data = getCalendarData(currentYear, currentMonth);
+            const numDays = new Date(currentYear, currentMonth, 0).getDate();
             for (let d = start; d <= end; d++) {
-                if (d >= 1 && d <= data.num_days) selectedDays.add(d);
+                if (d >= 1 && d <= numDays) selectedDays.add(d);
             }
             renderCalendar();
-            updateUI();
         }
 
         function clearSelection() {
             selectedDays.clear();
             renderCalendar();
-            updateUI();
         }
 
         // ─── Logique métier (remplace process_triskell_data) ─────────────────────
         function computeDays(year, month, absences) {
-            const data = getCalendarData(year, month);
-            return data.days.map(d => {
+            return getCalendarData(year, month).days.map(d => {
                 if (d.is_weekend) {
                     return { ...d, saisieA1039: 0, realiseA1039: 0, saisieEXT: 0, realiseEXT: 0 };
                 } else if (absences.has(d.day)) {
@@ -704,27 +667,24 @@
             });
         }
 
-        // ─── Génération PDF (remplace PDFMensuel + chapter_body) ─────────────────
+        // ─── Génération PDF ───────────────────────────────────────────────────────
         function handleGenerate() {
             hideError();
-            const year = parseInt(document.getElementById('year').value);
-            const month = parseInt(document.getElementById('month').value);
-
-            if (!year || year < 2020 || year > 2035) {
-                showError('Veuillez entrer une année valide (2020–2035).');
+            const pool = document.getElementById('poolInput').value.trim();
+            if (!pool) {
+                showError('Le champ "Pool de ressources" ne peut pas être vide.');
                 return;
             }
 
             document.getElementById('loading').style.display = 'block';
             document.getElementById('generateBtn').disabled = true;
 
-            // Léger délai pour laisser le DOM se mettre à jour avant le calcul synchrone
             setTimeout(() => {
                 try {
-                    const daysData = computeDays(year, month, selectedDays);
-                    generatePDF(year, month, daysData);
+                    const daysData = computeDays(currentYear, currentMonth, selectedDays);
+                    generatePDF(currentYear, currentMonth, daysData, pool);
                 } catch (e) {
-                    showError('Erreur lors de la génération du PDF : ' + e.message);
+                    showError('Erreur lors de la génération : ' + e.message);
                 } finally {
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('generateBtn').disabled = false;
@@ -732,7 +692,7 @@
             }, 50);
         }
 
-        function generatePDF(year, month, daysData) {
+        function generatePDF(year, month, daysData, poolName) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
 
@@ -740,7 +700,7 @@
             const margin = 10;
             const rowH = 8;
 
-            // ── En-tête de page ──────────────────────────────────────────────────
+            // ── En-tête ──────────────────────────────────────────────────────────
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(16);
             doc.text('Temps Passés - Liste', pageW / 2, 14, { align: 'center' });
@@ -748,108 +708,102 @@
             let y = 22;
 
             // ── Tableau récapitulatif ────────────────────────────────────────────
-            // Largeurs proportionnelles sur 190mm (pageW - 2*margin)
-            const sumColW = [45, 35, 35, 55, 20];
-            const sumHeaders = ['Pool de ressources', 'Parent', 'Objet', 'Description', 'Réalisé'];
-
+            // Largeurs sur 190mm (210 - 2×10)
+            // Colonnes : Pool de ressources (70) + Description (100) + Réalisé (20) = 190mm
+            const sumColW   = [70, 100, 20];
             const totalA1039 = daysData.reduce((s, d) => s + d.realiseA1039, 0);
-            const totalEXT   = daysData.reduce((s, d) => s + d.realiseEXT, 0);
+            const totalEXT   = daysData.reduce((s, d) => s + d.realiseEXT,   0);
 
-            drawRow(doc, margin, y, sumColW, sumHeaders, rowH, [233, 238, 244], true);
+            drawRow(doc, margin, y, sumColW,
+                ['Pool de ressources', 'Description', 'Réalisé'],
+                rowH, [233, 238, 244], true);
             y += rowH;
 
-            drawRow(doc, margin, y, sumColW, [
-                'A1039 Socle IAAS Cloud', 'Socle IaaS 2025', 'Socle IaaS 2025', '',
-                fmtNum(totalA1039)
-            ], rowH, [255, 255, 255], false, { lastRight: true });
+            drawRow(doc, margin, y, sumColW,
+                [poolName, '', fmtNum(totalA1039)],
+                rowH, [255, 255, 255], false, { lastRight: true });
             y += rowH;
 
-            drawRow(doc, margin, y, sumColW, [
-                'EXT - Absence U TECH', 'EXT - Absence U TECH', 'EXT - Absence U TECH',
-                'pour saisie des temps non travaillés pour U',
-                fmtNum(totalEXT)
-            ], rowH, [240, 242, 245], false, { lastRight: true });
+            drawRow(doc, margin, y, sumColW,
+                ['EXT - Absence U TECH',
+                 'pour saisie des temps non travaillés pour U', fmtNum(totalEXT)],
+                rowH, [240, 242, 245], false, { lastRight: true });
             y += rowH + 4;
 
             // ── Mois / Année ─────────────────────────────────────────────────────
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
             doc.text(`${year}-${pad(month)}`, pageW / 2, y + 7, { align: 'center' });
             y += 12;
 
             // ── Matrice des jours ────────────────────────────────────────────────
-            // Chaque colonne = (190mm / 6)
-            const colW = (pageW - 2 * margin) / 6;
+            const colW = (pageW - 2 * margin) / 6; // 31.666…mm
             const nb = daysData.length;
             const totalTravail = daysData.reduce((s, d) => s + d.saisieA1039, 0);
-            const totalAbsence = daysData.reduce((s, d) => s + d.saisieEXT, 0);
+            const totalAbsence = daysData.reduce((s, d) => s + d.saisieEXT,   0);
 
-            // Premier bloc : Total + 5 premiers jours
+            // Premier bloc : "Total" + 5 jours
             const firstEnd = Math.min(5, nb);
-            const firstHeaders = ['Total'];
-            const firstA1039  = [String(totalTravail)];
-            const firstEXT    = [String(totalAbsence)];
+            y = drawDayBlock(doc, margin, y, colW, rowH,
+                ['Total', ...daysData.slice(0, firstEnd).map(d => `${d.day_name} ${d.day}`)],
+                [String(totalTravail), ...daysData.slice(0, firstEnd).map(d => String(d.saisieA1039))],
+                [String(totalAbsence), ...daysData.slice(0, firstEnd).map(d => String(d.saisieEXT))]
+            );
 
-            for (let i = 0; i < firstEnd; i++) {
-                firstHeaders.push(`${daysData[i].day_name} ${daysData[i].day}`);
-                firstA1039.push(String(daysData[i].saisieA1039));
-                firstEXT.push(String(daysData[i].saisieEXT));
-            }
-
-            const firstColWidths = new Array(firstHeaders.length).fill(colW);
-            drawRow(doc, margin, y, firstColWidths, firstHeaders, rowH, [233, 238, 244], true);
-            y += rowH;
-            drawRow(doc, margin, y, firstColWidths, firstA1039, rowH, [255, 255, 255], false, { center: true });
-            y += rowH;
-            drawRow(doc, margin, y, firstColWidths, firstEXT, rowH, [240, 242, 245], false, { center: true });
-            y += rowH;
-
-            // Blocs suivants : 6 jours par ligne
+            // Blocs suivants : 6 jours
             for (let start = firstEnd; start < nb; start += 6) {
-                const end = Math.min(start + 6, nb);
-                const hdrs = [], a39 = [], ext = [];
-                for (let i = start; i < end; i++) {
-                    hdrs.push(`${daysData[i].day_name} ${daysData[i].day}`);
-                    a39.push(String(daysData[i].saisieA1039));
-                    ext.push(String(daysData[i].saisieEXT));
-                }
-                const cws = new Array(hdrs.length).fill(colW);
-                drawRow(doc, margin, y, cws, hdrs, rowH, [233, 238, 244], true);
-                y += rowH;
-                drawRow(doc, margin, y, cws, a39, rowH, [255, 255, 255], false, { center: true });
-                y += rowH;
-                drawRow(doc, margin, y, cws, ext, rowH, [240, 242, 245], false, { center: true });
-                y += rowH;
+                const slice = daysData.slice(start, start + 6);
+                y = drawDayBlock(doc, margin, y, colW, rowH,
+                    slice.map(d => `${d.day_name} ${d.day}`),
+                    slice.map(d => String(d.saisieA1039)),
+                    slice.map(d => String(d.saisieEXT))
+                );
             }
 
             // ── Pied de page ─────────────────────────────────────────────────────
             doc.setFont('helvetica', 'italic');
             doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
             doc.text('Page 1/1', pageW / 2, 287, { align: 'center' });
 
             doc.save(`Triskell_${pad(month)}-${year}.pdf`);
         }
 
+        /** Dessine les 3 lignes d'un bloc de jours (en-tête, A1039, EXT) et retourne le y suivant. */
+        function drawDayBlock(doc, x, y, colW, rowH, headers, a1039Row, extRow) {
+            const cws = new Array(headers.length).fill(colW);
+            drawRow(doc, x, y, cws, headers,  rowH, [233, 238, 244], true,  { center: true });
+            y += rowH;
+            drawRow(doc, x, y, cws, a1039Row, rowH, [255, 255, 255], false, { center: true });
+            y += rowH;
+            drawRow(doc, x, y, cws, extRow,   rowH, [240, 242, 245], false, { center: true });
+            y += rowH;
+            return y;
+        }
+
         /**
-         * Dessine une ligne de tableau avec cases colorées et texte.
-         * opts.lastRight : aligner la dernière cellule à droite
-         * opts.center    : centrer toutes les cellules
+         * Dessine une ligne de tableau jsPDF.
+         * IMPORTANT : setFillColor est rappelé avant chaque rect pour éviter
+         * que les opérations texte ne corrompent l'état graphique.
          */
         function drawRow(doc, x, y, colWidths, cells, height, fillColor, bold, opts = {}) {
-            doc.setFillColor(...fillColor);
-            doc.setDrawColor(180, 180, 180);
             doc.setFont('helvetica', bold ? 'bold' : 'normal');
             doc.setFontSize(9);
             doc.setTextColor(0, 0, 0);
+            doc.setDrawColor(190, 190, 190);
 
             let curX = x;
             cells.forEach((cell, i) => {
                 const w = colWidths[i];
+                const isLast = i === cells.length - 1;
+
+                // Réinitialiser la couleur de remplissage avant chaque rect
+                doc.setFillColor(fillColor[0], fillColor[1], fillColor[2]);
                 doc.rect(curX, y, w, height, 'FD');
 
-                const isLast = i === cells.length - 1;
+                // Position et alignement du texte
                 let textX, align;
-
                 if (opts.lastRight && isLast) {
                     textX = curX + w - 2;
                     align = 'right';
@@ -861,15 +815,17 @@
                     align = 'left';
                 }
 
-                const text = doc.splitTextToSize(String(cell), w - 4)[0] || '';
-                doc.text(text, textX, y + height * 0.65, { align });
+                // Tronquer le texte s'il dépasse la largeur de la cellule
+                const txt = doc.splitTextToSize(String(cell ?? ''), w - 4);
+                doc.text(txt[0] ?? '', textX, y + height * 0.65, { align });
+
                 curX += w;
             });
         }
 
         // ─── Utilitaires ──────────────────────────────────────────────────────────
         function fmtNum(n) { return n.toFixed(2).replace('.', ','); }
-        function pad(n) { return String(n).padStart(2, '0'); }
+        function pad(n)    { return String(n).padStart(2, '0'); }
 
         function showError(msg) {
             const el = document.getElementById('alertError');
