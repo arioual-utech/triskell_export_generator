@@ -7,8 +7,8 @@ Hébergé sur GitHub Pages : [https://arioual-utech.github.io/triskell_generator
 
 ## Fonctionnalités
 
-- Sélection du mois et de l'année cibles
-- Calendrier interactif pour marquer les jours d'absence
+- Calendrier interactif calé sur le mois en cours, navigable mois par mois
+- Champ **Pool de ressources** paramétrable
 - Sélecteurs rapides : tous les jours de semaine, tous les lundis/vendredis, tous les weekends
 - Sélection par plage de jours
 - Génération et téléchargement du PDF en un clic, directement dans le navigateur
@@ -20,9 +20,20 @@ Hébergé sur GitHub Pages : [https://arioual-utech.github.io/triskell_generator
 
 Ouvrir l'application dans le navigateur (GitHub Pages ou fichier local), puis :
 
-1. Sélectionner le **mois** et l'**année**
+1. Renseigner le champ **Pool de ressources** (voir section dédiée ci-dessous)
 2. Cliquer sur les jours d'absence dans le calendrier (ou utiliser les sélecteurs rapides)
 3. Cliquer sur **Générer le PDF** — le fichier `Triskell_MM-YYYY.pdf` est téléchargé automatiquement
+
+---
+
+## Trouver la valeur « Pool de ressources »
+
+Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskell.
+Pour le retrouver, connectez-vous à [Triskell](https://accounts.google.com/o/saml2/initsso?idpid=C02eepjsz&spid=447534574948&forceauthn=false) et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
+
+![Où trouver le pool de ressources dans Triskell](pool_de_ressources.png)
+
+> La valeur par défaut dans l'application est `A1039 Socle IAAS Cloud` — modifiez-la si votre pool est différent.
 
 ---
 
@@ -57,11 +68,8 @@ Le PDF suit le format Triskell standard :
 
 ```
 index.html              Application complète (HTML + CSS + JS, sans dépendances installées)
-requirements.txt        Dépendances Python (ancienne version Flask — non utilisée par GitHub Pages)
-web_interface.py        Ancienne interface Flask (conservée pour référence)
-triskell_interactive.py Ancienne logique Python (conservée pour référence)
-start_web_interface.py  Ancien script de démarrage Flask (conservé pour référence)
-templates/index.html    Ancien template Jinja2 (conservé pour référence)
+pool_de_ressources.png  Capture d'écran Triskell pour identifier le pool de ressources
+.gitignore              Exclut les PDF générés localement
 ```
 
 ### Dépendances embarquées (CDN, aucune installation)
@@ -70,27 +78,3 @@ templates/index.html    Ancien template Jinja2 (conservé pour référence)
 |---|---|
 | [Font Awesome 6](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css) | Icônes |
 | [jsPDF 2.5.1](https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js) | Génération PDF côté client |
-
----
-
-## Ancienne version (Flask / CLI)
-
-L'ancienne version nécessitait Python et un serveur local.
-
-### Lancement serveur local
-
-```bash
-pip install -r requirements.txt
-python3 start_web_interface.py
-# → http://localhost:5000
-```
-
-### CLI
-
-```bash
-python triskell_interactive.py \
-  --input-file "votre_fichier.xlsx" \
-  --absence-dates "9,10,15" \
-  --month 6 \
-  --year 2025
-```
