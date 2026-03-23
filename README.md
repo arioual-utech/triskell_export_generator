@@ -26,6 +26,22 @@ Ouvrir l'application dans le navigateur (GitHub Pages ou fichier local), puis :
 
 ---
 
+## Gestion des demi-journées
+
+Chaque clic sur un jour ouvré fait cycler son état :
+
+| Clics | Couleur | Effet dans le PDF |
+|---|---|---|
+| 1er clic | Bleu — absence journée entière | PdR = 0 / EXT = 1 |
+| 2ème clic | Orange — demi-journée d'absence | PdR = 0,5 / EXT = 0,5 |
+| 3ème clic | Blanc — retour jour travaillé | PdR = 1 / EXT = 0 |
+
+![Exemple journée entière (bleu) et demi-journée (orange)](full_half_day.png)
+
+Les sélecteurs rapides et la sélection par plage posent toujours des absences **journée entière**.
+
+---
+
 ## Trouver la valeur « Pool de ressources »
 
 Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskell.
@@ -53,7 +69,8 @@ Le PDF suit le format Triskell standard :
 
 ```
 index.html              Application complète (HTML + CSS + JS, sans dépendances installées)
-pool_de_ressources.png  Capture d'écran Triskell pour identifier le pool de ressources
+pool_de_ressources.png  Capture d'écran — où trouver le pool de ressources dans Triskell
+full_half_day.png       Capture d'écran — illustration journée entière vs demi-journée
 .gitignore              Exclut les PDF générés localement
 ```
 
