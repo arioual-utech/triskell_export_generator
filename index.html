@@ -233,6 +233,17 @@
             font-weight: 600;
         }
 
+        .calendar-day.half-day {
+            background: linear-gradient(135deg, #f39c12 50%, #fde8c8 50%);
+            color: #7a4a00;
+            border-color: #e67e22;
+            font-weight: 600;
+        }
+
+        .calendar-day.half-day:hover {
+            border-color: #c0392b;
+        }
+
         .calendar-day.weekend {
             background: #f2f2f2;
             color: #bbb;
@@ -241,6 +252,43 @@
 
         .calendar-day.empty {
             cursor: default;
+        }
+
+        /* Légende calendrier */
+        .calendar-legend {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.78em;
+            color: #555;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.worked   { background: #e8f0fe; border: 2px solid #c5d0fa; }
+        .legend-dot.full     { background: #667eea; }
+        .legend-dot.half     { background: linear-gradient(135deg, #f39c12 50%, #fde8c8 50%); border: 1.5px solid #e67e22; }
+        .legend-dot.weekend  { background: #f2f2f2; border: 1.5px solid #ddd; }
+
+        /* Tags résumé */
+        .tag-half {
+            background: #f39c12;
+            color: white;
         }
 
         /* Sélecteurs rapides */
@@ -477,6 +525,14 @@
                     <div class="calendar-grid" id="calendarGrid"></div>
                 </div>
 
+                <!-- Légende -->
+                <div class="calendar-legend">
+                    <div class="legend-item"><div class="legend-dot worked"></div> Jour travaillé</div>
+                    <div class="legend-item"><div class="legend-dot full"></div> Absence (journée)</div>
+                    <div class="legend-item"><div class="legend-dot half"></div> Absence (½ journée) <em style="color:#aaa;margin-left:2px">— 2ᵉ clic</em></div>
+                    <div class="legend-item"><div class="legend-dot weekend"></div> Weekend</div>
+                </div>
+
                 <!-- Sélecteurs rapides -->
                 <div class="quick-selectors">
                     <div class="quick-selector" onclick="applyPattern('all_weekdays')">
@@ -530,7 +586,8 @@
         const _today = new Date();
         let currentYear  = _today.getFullYear();
         let currentMonth = _today.getMonth() + 1; // 1-indexed
-        let selectedDays = new Set();
+        // Map<day, 'full' | 'half'>
+        let selectedDays = new Map();
 
         // ─── Init ─────────────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
@@ -580,11 +637,14 @@
 
             // Jours
             data.days.forEach(d => {
+                const state = selectedDays.get(d.day); // undefined | 'full' | 'half'
                 const el = document.createElement('div');
                 el.className = 'calendar-day' +
-                    (d.is_weekend ? ' weekend' : '') +
-                    (!d.is_weekend && selectedDays.has(d.day) ? ' selected' : '');
+                    (d.is_weekend ? ' weekend' :
+                     state === 'full' ? ' selected' :
+                     state === 'half' ? ' half-day' : '');
                 el.textContent = d.day;
+                if (state === 'half') el.title = '½ journée d\'absence';
                 if (!d.is_weekend) el.onclick = () => toggleDay(d.day);
                 grid.appendChild(el);
             });
@@ -593,20 +653,34 @@
         }
 
         function toggleDay(day) {
-            selectedDays.has(day) ? selectedDays.delete(day) : selectedDays.add(day);
+            const state = selectedDays.get(day);
+            if (!state)           selectedDays.set(day, 'full');
+            else if (state === 'full')  selectedDays.set(day, 'half');
+            else                  selectedDays.delete(day);
             renderCalendar();
         }
 
         function updateUI() {
-            const sorted = Array.from(selectedDays).sort((a, b) => a - b);
+            const fullDays = [], halfDays = [];
+            selectedDays.forEach((state, day) => {
+                (state === 'full' ? fullDays : halfDays).push(day);
+            });
+            fullDays.sort((a, b) => a - b);
+            halfDays.sort((a, b) => a - b);
 
-            document.getElementById('absenceDatesDisplay').value =
-                sorted.length ? sorted.join(', ') : '';
+            const parts = [];
+            if (fullDays.length) parts.push(fullDays.join(', '));
+            if (halfDays.length) parts.push('½: ' + halfDays.join(', '));
+            document.getElementById('absenceDatesDisplay').value = parts.join(' | ');
 
             const summary = document.getElementById('selectedDaysSummary');
-            summary.innerHTML = sorted.length
-                ? sorted.map(d => `<span class="selected-day-tag">${d}</span>`).join('')
-                : '<span class="empty-selection">Aucun jour sélectionné</span>';
+            if (!fullDays.length && !halfDays.length) {
+                summary.innerHTML = '<span class="empty-selection">Aucun jour sélectionné</span>';
+                return;
+            }
+            summary.innerHTML =
+                fullDays.map(d => `<span class="selected-day-tag">${d}</span>`).join('') +
+                halfDays.map(d => `<span class="selected-day-tag tag-half">½ ${d}</span>`).join('');
         }
 
         // ─── Navigation mois ──────────────────────────────────────────────────────
@@ -627,10 +701,10 @@
             const data = getCalendarData(currentYear, currentMonth);
             data.days.forEach(d => {
                 const dow = (new Date(currentYear, currentMonth - 1, d.day).getDay() + 6) % 7;
-                if (pattern === 'all_weekdays' && !d.is_weekend)  selectedDays.add(d.day);
-                if (pattern === 'all_weekends' && d.is_weekend)   selectedDays.add(d.day);
-                if (pattern === 'day_0' && dow === 0)             selectedDays.add(d.day);
-                if (pattern === 'day_4' && dow === 4)             selectedDays.add(d.day);
+                if (pattern === 'all_weekdays' && !d.is_weekend)  selectedDays.set(d.day, 'full');
+                if (pattern === 'all_weekends' && d.is_weekend)   selectedDays.set(d.day, 'full');
+                if (pattern === 'day_0' && dow === 0)             selectedDays.set(d.day, 'full');
+                if (pattern === 'day_4' && dow === 4)             selectedDays.set(d.day, 'full');
             });
             renderCalendar();
         }
@@ -644,7 +718,7 @@
             }
             const numDays = new Date(currentYear, currentMonth, 0).getDate();
             for (let d = start; d <= end; d++) {
-                if (d >= 1 && d <= numDays) selectedDays.add(d);
+                if (d >= 1 && d <= numDays) selectedDays.set(d, 'full');
             }
             renderCalendar();
         }
@@ -655,14 +729,18 @@
         }
 
         // ─── Logique métier (remplace process_triskell_data) ─────────────────────
-        function computeDays(year, month, absences) {
+        function computeDays(year, month, selections) {
             return getCalendarData(year, month).days.map(d => {
                 if (d.is_weekend) {
                     return { ...d, saisieA1039: 0, realiseA1039: 0, saisieEXT: 0, realiseEXT: 0 };
-                } else if (absences.has(d.day)) {
-                    return { ...d, saisieA1039: 0, realiseA1039: 0, saisieEXT: 1, realiseEXT: 1 };
+                }
+                const state = selections.get(d.day);
+                if (state === 'full') {
+                    return { ...d, saisieA1039: 0,   realiseA1039: 0,   saisieEXT: 1,   realiseEXT: 1 };
+                } else if (state === 'half') {
+                    return { ...d, saisieA1039: 0.5, realiseA1039: 0.5, saisieEXT: 0.5, realiseEXT: 0.5 };
                 } else {
-                    return { ...d, saisieA1039: 1, realiseA1039: 1, saisieEXT: 0, realiseEXT: 0 };
+                    return { ...d, saisieA1039: 1,   realiseA1039: 1,   saisieEXT: 0,   realiseEXT: 0 };
                 }
             });
         }
@@ -747,8 +825,8 @@
             const firstEnd = Math.min(5, nb);
             y = drawDayBlock(doc, margin, y, colW, rowH,
                 ['Total', ...daysData.slice(0, firstEnd).map(d => `${d.day_name} ${d.day}`)],
-                [String(totalTravail), ...daysData.slice(0, firstEnd).map(d => String(d.saisieA1039))],
-                [String(totalAbsence), ...daysData.slice(0, firstEnd).map(d => String(d.saisieEXT))]
+                [fmtVal(totalTravail), ...daysData.slice(0, firstEnd).map(d => fmtVal(d.saisieA1039))],
+                [fmtVal(totalAbsence), ...daysData.slice(0, firstEnd).map(d => fmtVal(d.saisieEXT))]
             );
 
             // Blocs suivants : 6 jours
@@ -756,8 +834,8 @@
                 const slice = daysData.slice(start, start + 6);
                 y = drawDayBlock(doc, margin, y, colW, rowH,
                     slice.map(d => `${d.day_name} ${d.day}`),
-                    slice.map(d => String(d.saisieA1039)),
-                    slice.map(d => String(d.saisieEXT))
+                    slice.map(d => fmtVal(d.saisieA1039)),
+                    slice.map(d => fmtVal(d.saisieEXT))
                 );
             }
 
@@ -825,6 +903,7 @@
 
         // ─── Utilitaires ──────────────────────────────────────────────────────────
         function fmtNum(n) { return n.toFixed(2).replace('.', ','); }
+        function fmtVal(v) { return v === 0.5 ? '0,5' : String(v); }
         function pad(n)    { return String(n).padStart(2, '0'); }
 
         function showError(msg) {
