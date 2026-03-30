@@ -45,7 +45,7 @@ Les sélecteurs rapides et la sélection par plage posent toujours des absences 
 ## Trouver la valeur « Pool de ressources »
 
 Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskell.
-Pour le retrouver, connectez-vous à  et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
+Pour le retrouver, connectez-vous à Triskell et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
 
 ![Où trouver le pool de ressources dans Triskell](pool_de_ressources.png)
 
