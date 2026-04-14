@@ -1,4 +1,4 @@
-# Triskell Export Generator
+# Triskool Export Generator
 
 Générateur de rapports de temps Triskell au format PDF, **100 % côté navigateur**, sans serveur.
 Hébergé sur GitHub Pages : [https://triskool.github.io/triskool_export_generator/](https://triskool.github.io/triskool_export_generator/)
@@ -22,7 +22,7 @@ Ouvrir l'application dans le navigateur (GitHub Pages ou fichier local), puis :
 
 1. Renseigner le champ **Pool de ressources** (voir section dédiée ci-dessous)
 2. Cliquer sur les jours d'absence dans le calendrier (ou utiliser les sélecteurs rapides)
-3. Cliquer sur **Générer le PDF** — le fichier `Triskell_MM-YYYY.pdf` est téléchargé automatiquement
+3. Cliquer sur **Générer le PDF** — le fichier `Triskool_MM-YYYY.pdf` est téléchargé automatiquement
 
 ---
 
@@ -44,18 +44,18 @@ Les sélecteurs rapides et la sélection par plage posent toujours des absences 
 
 ## Trouver la valeur « Pool de ressources »
 
-Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskell.
-Pour le retrouver, connectez-vous à Triskell et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
+Le champ **Pool de ressources** correspond à l'identifiant de votre activité dans Triskool.
+Pour le retrouver, connectez-vous à Triskool et repérez la valeur dans la colonne **Pool de ressources** de votre feuille de temps mensuelle.
 
-![Où trouver le pool de ressources dans Triskell](pool_de_ressources.png)
+![Où trouver le pool de ressources dans Triskool](pool_de_ressources.png)
 
-> La valeur par défaut dans l'application est `A1039 Socle IAAS Cloud` — modifiez-la si votre pool est différent.
+> La valeur par défaut dans l'application est `A1039 Socle Cloud` — modifiez-la si votre pool est différent.
 
 ---
 
 ## Format du PDF généré
 
-Le PDF suit le format Triskell standard :
+Le PDF suit le format Triskool standard :
 
 - **Tableau récapitulatif** : totaux PdR (jours travaillés) et EXT (jours d'absence)
 - **Matrice des jours** : grille mensuelle avec une ligne par type (travail / absence)
@@ -69,7 +69,7 @@ Le PDF suit le format Triskell standard :
 
 ```
 index.html              Application complète (HTML + CSS + JS, sans dépendances installées)
-pool_de_ressources.png  Capture d'écran — où trouver le pool de ressources dans Triskell
+pool_de_ressources.png  Capture d'écran — où trouver le pool de ressources dans Triskool
 full_half_day.png       Capture d'écran — illustration journée entière vs demi-journée
 .gitignore              Exclut les PDF générés localement
 ```
