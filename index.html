@@ -473,8 +473,14 @@
                 <div id="alertError" class="alert alert-error"></div>
 
                 <div class="form-group">
+                    <label for="clientInput">Client</label>
+                    <input type="text" id="clientInput" value="I Tech" placeholder="ex: I Tech">
+                    <div class="form-hint">Nom du client utilisé dans le PDF</div>
+                </div>
+
+                <div class="form-group">
                     <label for="poolInput">Pool de ressources</label>
-                    <input type="text" id="poolInput" value="A1039 Socle IAAS Cloud" placeholder="ex: A1039 Socle IAAS Cloud">
+                    <input type="text" id="poolInput" value="A1039 Socle Cloud" placeholder="ex: A1039 Socle Cloud">
                     <div class="form-hint">Utilisé dans le tableau récapitulatif du PDF</div>
                 </div>
 
@@ -752,6 +758,7 @@
                 showError('Le champ "Pool de ressources" ne peut pas être vide.');
                 return;
             }
+            const client = document.getElementById('clientInput').value.trim() || 'I Tech';
 
             document.getElementById('loading').style.display = 'block';
             document.getElementById('generateBtn').disabled = true;
@@ -759,7 +766,7 @@
             setTimeout(() => {
                 try {
                     const daysData = computeDays(currentYear, currentMonth, selectedDays);
-                    generatePDF(currentYear, currentMonth, daysData, pool);
+                    generatePDF(currentYear, currentMonth, daysData, pool, client);
                 } catch (e) {
                     showError('Erreur lors de la génération : ' + e.message);
                 } finally {
@@ -769,7 +776,7 @@
             }, 50);
         }
 
-        function generatePDF(year, month, daysData, poolName) {
+        function generatePDF(year, month, daysData, poolName, clientName) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('p', 'mm', 'a4');
 
@@ -802,8 +809,8 @@
             y += rowH;
 
             drawRow(doc, margin, y, sumColW,
-                ['EXT - Absence I TECH',
-                 'réservé aux externes pour saisie des temps non travaillés pour I TECH', fmtNum(totalEXT)],
+                [`EXT - Absence ${clientName}`,
+                 `réservé aux externes pour saisie des temps non travaillés pour ${clientName}`, fmtNum(totalEXT)],
                 rowH, [240, 242, 245], false, { lastRight: true });
             y += rowH + 4;
 
