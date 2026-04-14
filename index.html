@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Rapport Triskell - Calendrier Interactif</title>
+    <title>Générateur de Rapport Triskool - Calendrier Interactif</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -458,7 +458,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-calendar-alt"></i> Générateur Triskell</h1>
+            <h1><i class="fas fa-calendar-alt"></i> Générateur Triskool</h1>
             <p>Marquez vos jours d'absence dans le calendrier, puis générez votre PDF</p>
         </div>
 
@@ -728,7 +728,6 @@
             renderCalendar();
         }
 
-        // ─── Logique métier (remplace process_triskell_data) ─────────────────────
         function computeDays(year, month, selections) {
             return getCalendarData(year, month).days.map(d => {
                 if (d.is_weekend) {
@@ -803,8 +802,8 @@
             y += rowH;
 
             drawRow(doc, margin, y, sumColW,
-                ['EXT - Absence U TECH',
-                 'réservé aux externes pour saisie des temps non travaillés pour U TECH', fmtNum(totalEXT)],
+                ['EXT - Absence I TECH',
+                 'réservé aux externes pour saisie des temps non travaillés pour I TECH', fmtNum(totalEXT)],
                 rowH, [240, 242, 245], false, { lastRight: true });
             y += rowH + 4;
 
