@@ -1,7 +1,7 @@
 # Triskell Export Generator
 
 Générateur de rapports de temps Triskell au format PDF, **100 % côté navigateur**, sans serveur.
-Hébergé sur GitHub Pages : [https://arioual-utech.github.io/triskell_export_generator/](https://arioual-utech.github.io/triskell_export_generator/)
+Hébergé sur GitHub Pages : [https://triskool.github.io/triskell_export_generator/](https://triskool.github.io/triskell_export_generator/)
 
 ---
 
