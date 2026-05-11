@@ -250,6 +250,14 @@
             cursor: default;
         }
 
+        .calendar-day.holiday {
+            background: #fde2e2;
+            color: #c0392b;
+            border-color: #f5c6c6;
+            cursor: default;
+            font-weight: 600;
+        }
+
         .calendar-day.empty {
             cursor: default;
         }
@@ -284,10 +292,16 @@
         .legend-dot.full     { background: #667eea; }
         .legend-dot.half     { background: linear-gradient(135deg, #f39c12 50%, #fde8c8 50%); border: 1.5px solid #e67e22; }
         .legend-dot.weekend  { background: #f2f2f2; border: 1.5px solid #ddd; }
+        .legend-dot.holiday  { background: #fde2e2; border: 1.5px solid #f5c6c6; }
 
         /* Tags résumé */
         .tag-half {
             background: #f39c12;
+            color: white;
+        }
+
+        .tag-holiday {
+            background: #c0392b;
             color: white;
         }
 
@@ -536,6 +550,7 @@
                     <div class="legend-item"><div class="legend-dot worked"></div> Jour travaillé</div>
                     <div class="legend-item"><div class="legend-dot full"></div> Absence (journée)</div>
                     <div class="legend-item"><div class="legend-dot half"></div> Absence (½ journée) <em style="color:#aaa;margin-left:2px">— 2ᵉ clic</em></div>
+                    <div class="legend-item"><div class="legend-dot holiday"></div> Jour férié</div>
                     <div class="legend-item"><div class="legend-dot weekend"></div> Weekend</div>
                 </div>
 
@@ -600,16 +615,68 @@
             renderCalendar();
         });
 
+        // ─── Jours fériés français (algorithme de Meeus pour Pâques) ─────────────
+        function getEasterDate(year) {
+            const a = year % 19;
+            const b = Math.floor(year / 100);
+            const c = year % 100;
+            const d = Math.floor(b / 4);
+            const e = b % 4;
+            const f = Math.floor((b + 8) / 25);
+            const g = Math.floor((b - f + 1) / 3);
+            const h = (19 * a + b - d - g + 15) % 30;
+            const i = Math.floor(c / 4);
+            const k = c % 4;
+            const l = (32 + 2 * e + 2 * i - h - k) % 7;
+            const m = Math.floor((a + 11 * h + 22 * l) / 451);
+            const month = Math.floor((h + l - 7 * m + 114) / 31);
+            const day = ((h + l - 7 * m + 114) % 31) + 1;
+            return new Date(year, month - 1, day);
+        }
+
+        function addDays(date, n) {
+            const r = new Date(date);
+            r.setDate(r.getDate() + n);
+            return r;
+        }
+
+        /** Renvoie une Map<"MM-DD", nom du férié> pour l'année donnée. */
+        function getFrenchHolidays(year) {
+            const easter = getEasterDate(year);
+            const key = (dt) => `${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
+            const m = new Map();
+            m.set('01-01', "Jour de l'An");
+            m.set(key(addDays(easter, 1)),  'Lundi de Pâques');
+            m.set('05-01', 'Fête du Travail');
+            m.set('05-08', 'Victoire 1945');
+            m.set(key(addDays(easter, 39)), 'Ascension');
+            m.set(key(addDays(easter, 50)), 'Lundi de Pentecôte');
+            m.set('07-14', 'Fête nationale');
+            m.set('08-15', 'Assomption');
+            m.set('11-01', 'Toussaint');
+            m.set('11-11', 'Armistice');
+            m.set('12-25', 'Noël');
+            return m;
+        }
+
         // ─── Données du calendrier (remplace /api/calendar) ──────────────────────
         function getCalendarData(year, month) {
             const firstDate = new Date(year, month - 1, 1);
             const firstDay  = (firstDate.getDay() + 6) % 7; // 0=Lun … 6=Dim
             const numDays   = new Date(year, month, 0).getDate();
+            const holidays  = getFrenchHolidays(year);
             const days = [];
 
             for (let d = 1; d <= numDays; d++) {
                 const dow = (new Date(year, month - 1, d).getDay() + 6) % 7;
-                days.push({ day: d, day_name: DAY_NAMES[dow], is_weekend: dow >= 5 });
+                const holidayName = holidays.get(`${pad(month)}-${pad(d)}`) || null;
+                days.push({
+                    day: d,
+                    day_name: DAY_NAMES[dow],
+                    is_weekend: dow >= 5,
+                    is_holiday: !!holidayName,
+                    holiday_name: holidayName,
+                });
             }
             return { year, month, month_name: MONTH_NAMES[month - 1], num_days: numDays, first_day: firstDay, days };
         }
@@ -647,11 +714,13 @@
                 const el = document.createElement('div');
                 el.className = 'calendar-day' +
                     (d.is_weekend ? ' weekend' :
+                     d.is_holiday ? ' holiday' :
                      state === 'full' ? ' selected' :
                      state === 'half' ? ' half-day' : '');
                 el.textContent = d.day;
-                if (state === 'half') el.title = '½ journée d\'absence';
-                if (!d.is_weekend) el.onclick = () => toggleDay(d.day);
+                if (d.is_holiday)           el.title = d.holiday_name;
+                else if (state === 'half')  el.title = '½ journée d\'absence';
+                if (!d.is_weekend && !d.is_holiday) el.onclick = () => toggleDay(d.day);
                 grid.appendChild(el);
             });
 
@@ -674,19 +743,25 @@
             fullDays.sort((a, b) => a - b);
             halfDays.sort((a, b) => a - b);
 
+            const holidayDays = getCalendarData(currentYear, currentMonth).days
+                .filter(d => d.is_holiday)
+                .map(d => d.day);
+
             const parts = [];
-            if (fullDays.length) parts.push(fullDays.join(', '));
-            if (halfDays.length) parts.push('½: ' + halfDays.join(', '));
+            if (fullDays.length)    parts.push(fullDays.join(', '));
+            if (halfDays.length)    parts.push('½: ' + halfDays.join(', '));
+            if (holidayDays.length) parts.push('Fériés: ' + holidayDays.join(', '));
             document.getElementById('absenceDatesDisplay').value = parts.join(' | ');
 
             const summary = document.getElementById('selectedDaysSummary');
-            if (!fullDays.length && !halfDays.length) {
+            if (!fullDays.length && !halfDays.length && !holidayDays.length) {
                 summary.innerHTML = '<span class="empty-selection">Aucun jour sélectionné</span>';
                 return;
             }
             summary.innerHTML =
                 fullDays.map(d => `<span class="selected-day-tag">${d}</span>`).join('') +
-                halfDays.map(d => `<span class="selected-day-tag tag-half">½ ${d}</span>`).join('');
+                halfDays.map(d => `<span class="selected-day-tag tag-half">½ ${d}</span>`).join('') +
+                holidayDays.map(d => `<span class="selected-day-tag tag-holiday">F ${d}</span>`).join('');
         }
 
         // ─── Navigation mois ──────────────────────────────────────────────────────
@@ -706,6 +781,7 @@
         function applyPattern(pattern) {
             const data = getCalendarData(currentYear, currentMonth);
             data.days.forEach(d => {
+                if (d.is_holiday) return;
                 const dow = (new Date(currentYear, currentMonth - 1, d.day).getDay() + 6) % 7;
                 if (pattern === 'all_weekdays' && !d.is_weekend)  selectedDays.set(d.day, 'full');
                 if (pattern === 'all_weekends' && d.is_weekend)   selectedDays.set(d.day, 'full');
@@ -722,9 +798,12 @@
                 showError('Plage invalide : le début doit être ≤ à la fin.');
                 return;
             }
-            const numDays = new Date(currentYear, currentMonth, 0).getDate();
+            const numDays  = new Date(currentYear, currentMonth, 0).getDate();
+            const holidays = getFrenchHolidays(currentYear);
             for (let d = start; d <= end; d++) {
-                if (d >= 1 && d <= numDays) selectedDays.set(d, 'full');
+                if (d < 1 || d > numDays) continue;
+                if (holidays.has(`${pad(currentMonth)}-${pad(d)}`)) continue;
+                selectedDays.set(d, 'full');
             }
             renderCalendar();
         }
@@ -738,6 +817,9 @@
             return getCalendarData(year, month).days.map(d => {
                 if (d.is_weekend) {
                     return { ...d, saisieA1039: 0, realiseA1039: 0, saisieEXT: 0, realiseEXT: 0 };
+                }
+                if (d.is_holiday) {
+                    return { ...d, saisieA1039: 0, realiseA1039: 0, saisieEXT: 1, realiseEXT: 1 };
                 }
                 const state = selections.get(d.day);
                 if (state === 'full') {
